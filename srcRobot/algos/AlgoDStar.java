@@ -68,27 +68,27 @@ public class AlgoDStar {
 	
 	private static void receptionMessage(boolean[][]maze, boolean[][] isChecked, Coordonnees pos) throws IOException {
 		int x, y, message;
-    	while((message = Main.dis.readInt()) != 0) {
-    		x = message % 10;
-    		message /= 10;
-    		y = message % 10;
-    		message /= 10;
-    		isChecked[x][y] = true;
-    		x = x * 2 + 1;
-    		y = y * 2 + 1;
-    		if (message % 10 == 0)
-    			maze[x-1][y] = false;
-    		message /= 10;
-    		if (message % 10 == 0)
-    			maze[x][y+1] = false;
-    		message /= 10;
-    		if (message % 10 == 0)
-    			maze[x+1][y] = false;
-    		message /= 10;
-    		if (message % 10 == 0)
-    			maze[x][y-1] = false;
-    		message /= 10;
-    	}
+		while((message = Main.dis.readInt()) != 0) {
+			x = message % 10;
+			message /= 10;
+			y = message % 10;
+			message /= 10;
+			isChecked[x][y] = true;
+			x = x * 2 + 1;
+			y = y * 2 + 1;
+			if (message % 10 == 0)
+				maze[x-1][y] = false;
+			message /= 10;
+			if (message % 10 == 0)
+				maze[x][y+1] = false;
+			message /= 10;
+			if (message % 10 == 0)
+				maze[x+1][y] = false;
+			message /= 10;
+			if (message % 10 == 0)
+				maze[x][y-1] = false;
+			message /= 10;
+		}
 	}
 	
 	private static void parcourirChemin(boolean[][] maze, boolean[][] isChecked, Coordonnees pos, Orientation[] ori, List<Orientation> l, boolean comm) throws IOException {
