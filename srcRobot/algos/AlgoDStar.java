@@ -32,38 +32,38 @@ public class AlgoDStar {
 				break;
 			case OUEST: maze[pos.x - 1][pos.y] = false;
 				break;
-	    }
+		}
 	}
 	
 	private static void scan(boolean[][] maze, Coordonnees pos, Orientation[] ori) {
 		if(robot.regardeToutDroit())
-	          majMap(maze, pos, ori);
+			majMap(maze, pos, ori);
 		
-	    ori[0] = ori[0].next();
-	    if(robot.regardeADroite())
-	          majMap(maze, pos, ori);
-	    
-	    ori[0] = ori[0].previous();
-	    ori[0] = ori[0].previous();
-	    if(robot.regardeAGauche())
-	          majMap(maze, pos, ori);
-	    
+		ori[0] = ori[0].next();
+		if(robot.regardeADroite())
+			majMap(maze, pos, ori);
+		
+		ori[0] = ori[0].previous();
+		ori[0] = ori[0].previous();
+		if(robot.regardeAGauche())
+			majMap(maze, pos, ori);
+		
 		ori[0] = ori[0].next();
 	}
 
 	private static void envoieMessage(boolean[][] maze, Coordonnees pos) throws IOException {
 		int message = pos.x/2 + 10 * (pos.y/2);
-    	if (maze[pos.x-1][pos.y])
-    		message += 1 * 100;
-    	if (maze[pos.x][pos.y+1])
-    		message += 1 * 1000;
-    	if (maze[pos.x+1][pos.y])
-    		message += 1 * 10000;
-    	if (maze[pos.x][pos.y-1])
-    		message += 1 * 100000;
-    	
-    	Main.dos.writeInt(message);
-    	Main.dos.flush();
+		if (maze[pos.x-1][pos.y])
+			message += 1 * 100;
+		if (maze[pos.x][pos.y+1])
+			message += 1 * 1000;
+		if (maze[pos.x+1][pos.y])
+			message += 1 * 10000;
+		if (maze[pos.x][pos.y-1])
+			message += 1 * 100000;
+		
+		Main.dos.writeInt(message);
+		Main.dos.flush();
 	}
 	
 	private static void receptionMessage(boolean[][]maze, boolean[][] isChecked, Coordonnees pos) throws IOException {
@@ -94,24 +94,24 @@ public class AlgoDStar {
 	private static void parcourirChemin(boolean[][] maze, boolean[][] isChecked, Coordonnees pos, Orientation[] ori, List<Orientation> l, boolean comm) throws IOException {
 		boolean fin = false;
 		
-	    while(!l.isEmpty() && !fin) {
-	    	if(!Deplacement.deplacement(l.get(l.size()-1), ori, pos, 2))
-	    		fin = true;
+		while(!l.isEmpty() && !fin) {
+			if(!Deplacement.deplacement(l.get(l.size()-1), ori, pos, 2))
+				fin = true;
 			else
-	    		l.remove(l.size()-1);
-	    	
-    		if(!isChecked[pos.x/2][pos.y/2]) {
-    			scan(maze, pos, ori);
-    			isChecked[pos.x/2][pos.y/2] = true; 
-    		}
-	    	
-    		if(comm) {
-    			envoieMessage(maze, pos);
-    			receptionMessage(maze, isChecked, pos);
-    		}
-	    }
-	    
-	    l.clear();
+				l.remove(l.size()-1);
+			
+			if(!isChecked[pos.x/2][pos.y/2]) {
+				scan(maze, pos, ori);
+				isChecked[pos.x/2][pos.y/2] = true; 
+			}
+			
+			if(comm) {
+				envoieMessage(maze, pos);
+				receptionMessage(maze, isChecked, pos);
+			}
+		}
+		
+		l.clear();
 	}
 	
 	private static Orientation newDir(Coordonnees pos1, Coordonnees pos2) {
@@ -142,44 +142,44 @@ public class AlgoDStar {
 	private static boolean rechercheChemin(boolean[][] maze, Coordonnees pos, Coordonnees goal, List<Orientation> l) {
 		
 		List<Case> openList = new LinkedList<Case>();
-        List<Case> closedList = new LinkedList<Case>();
-        
+		List<Case> closedList = new LinkedList<Case>();
+		
 		Case first = new Case();
 		first.pos = pos;
 		first.cout = 0;
 		first.heuristique = Fonctions.heuristique(pos, goal);
-        
-        openList.add(first);
-        
-        Case current = new Case();
-        boolean done = false;
-        while(!done) {
-            current = lowestFInOpen(openList);
-            closedList.add(current);
-            openList.remove(current);
-
-            if ((current.pos.x == goal.x) && (current.pos.y == goal.y)) {
-                calcPath(first, current, l);
-                return true;
-            }
-            
-            List<Case> adjacentNodes = getAdjacent(current, maze);
-            for (int i = 0; i < adjacentNodes.size(); i++) {
-                Case currentAdj = adjacentNodes.get(i);
-                
-                if(!appartient(openList, currentAdj) && !appartient(closedList, currentAdj)) {
-                    currentAdj.pere = current;
-                    currentAdj.heuristique = Fonctions.heuristique(currentAdj.pos, goal);
-                    currentAdj.cout = current.cout + 1;
-                    openList.add(currentAdj);
-                }
-            }
-
-            if (openList.isEmpty()) {
-                return false;
-            }
-        }
-        return false;
+		
+		openList.add(first);
+		
+		Case current = new Case();
+		boolean done = false;
+		while(!done) {
+			current = lowestFInOpen(openList);
+			closedList.add(current);
+			openList.remove(current);
+			
+			if ((current.pos.x == goal.x) && (current.pos.y == goal.y)) {
+				calcPath(first, current, l);
+				return true;
+			}
+			
+			List<Case> adjacentNodes = getAdjacent(current, maze);
+			for (int i = 0; i < adjacentNodes.size(); i++) {
+				Case currentAdj = adjacentNodes.get(i);
+				
+				if(!appartient(openList, currentAdj) && !appartient(closedList, currentAdj)) {
+					currentAdj.pere = current;
+					currentAdj.heuristique = Fonctions.heuristique(currentAdj.pos, goal);
+					currentAdj.cout = current.cout + 1;
+					openList.add(currentAdj);
+				}
+			}
+			
+			if (openList.isEmpty()) {
+				return false;
+			}
+		}
+		return false;
 	}
 	
 	private static void aux(Case current, boolean[][] maze, int x, int y, List<Case> liste) {
@@ -221,13 +221,13 @@ public class AlgoDStar {
 
 	public static void main(Coordonnees pos, Coordonnees goal, Orientation[] ori, boolean[][] isChecked, boolean[][] maze, boolean comm) throws IOException {
 		List<Orientation> l = new ArrayList<Orientation>();
-	    
+		
 		if(!isChecked[pos.x/2][pos.y/2]) {
 			scan(maze, pos, ori);
 			isChecked[pos.x/2][pos.y/2] = true;
 		}
 		
-	    while(!Fonctions.fini(pos, goal)) {
+		while(!Fonctions.fini(pos, goal)) {
 			if(!rechercheChemin(maze, pos, goal, l)) {
 				System.out.println("Pas de chemin");
 				System.out.println("vers la sortie.");
